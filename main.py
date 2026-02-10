@@ -1,6 +1,6 @@
 import uvicorn
 
-from app.api.main import app as drive_now_app
+from src.api.main import app as drive_now_app
 
 
 def main():
