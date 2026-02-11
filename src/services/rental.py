@@ -4,6 +4,8 @@ from typing import Optional
 from src.db.models import Rental, Car, CarStatus
 from src.db.session import Session
 
+logger = logging.getLogger(__name__)
+
 
 class RentalService:
     """
@@ -12,6 +14,7 @@ class RentalService:
     Manages business logic for creating and ending rentals,
     including updating related car status.
     """
+
     def __init__(self, db: Session):
         """
         Initialize the service with an active database session.
@@ -37,12 +40,14 @@ class RentalService:
         """
         car = self.db.query(Car).filter(Car.id == car_id, Car.status == CarStatus.AVAILABLE).first()
         if not car:
+            logger.error("Car already is not ready for use", extra={"car_id": car_id})
             raise ValueError(f"Car with id {car_id} is not available")
         car.status = CarStatus.IN_USE
         rental = Rental(car_id=car_id, customer_name=customer_name)
         self.db.add(rental)
         self.db.commit()
         self.db.refresh(rental)
+        logger.error("New rental added", extra={"car_id": car_id, "customer_name": customer_name})
         return rental
 
     def end_rental(self, rental_id: int, end_date: Optional[datetime.datetime] = None) -> Rental:
@@ -62,12 +67,15 @@ class RentalService:
         """
         rental = self.db.query(Rental).filter(Rental.id == rental_id).first()
         if not rental:
+            logger.error("No rental found to end", extra={"rental_id": rental_id})
             raise ValueError(f"Rental with id {rental_id} is not found")
         if rental.end_date:
+            logger.error("Rental already ended", extra={"rental_id": rental_id})
             raise ValueError(f"Rental with id {rental_id} already ended")
 
         rental.end_date = end_date or datetime.datetime.now(datetime.UTC)
         rental.car.status = CarStatus.AVAILABLE
         self.db.commit()
         self.db.refresh(rental)
+        logger.error("Rental ended successfully", extra={"rental_id": rental_id, })
         return rental

@@ -1,7 +1,10 @@
+import logging
 from typing import Optional
 
 from src.db.models import Car, CarStatus
 from src.db.session import Session
+
+logger = logging.getLogger(__name__)
 
 
 class CarService:
@@ -11,6 +14,7 @@ class CarService:
     Encapsulates database access and business logic for creating,
     retrieving, updating, and listing cars
     """
+
     def __init__(self, db: Session):
         """
         Initialize the service with an active database session
@@ -35,6 +39,7 @@ class CarService:
         self.db.add(car)
         self.db.commit()
         self.db.refresh(car)
+        logger.info(f"New car added", extra={"model": model, "year": year})
         return car
 
     def get_car_by_id(self, car_id: int) -> Car | None:
@@ -65,10 +70,13 @@ class CarService:
         """
         car = self.get_car_by_id(car_id)
         if not car:
+            logger.error("No car with the given ID found", extra={"car_id": car_id})
             raise ValueError(f"No car with id {car_id} was found")
+        previous_status = car.status
         car.status = new_status
         self.db.commit()
         self.db.refresh(car)
+        logger.info(f"Car status updated", extra={"previous_status": previous_status, "new_status": new_status})
         return car
 
     def list_cars(self, status: Optional[CarStatus] = None, limit: Optional[int] = 10) -> list[Car]:
