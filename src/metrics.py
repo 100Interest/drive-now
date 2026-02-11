@@ -42,7 +42,7 @@ def update_gauges():
         AVAILABLE_CARS.set(active_cars)
 
         # Count rentals WHERE end_date IS NULL (yet to terminate)
-        ongoing_rentals = session.query(Rental).filter(Rental.end_date.is_(None)).count()
+        ongoing_rentals = session.query(Rental).filter(Rental.rental_end_date.is_(None)).count()
         ONGOING_RENTALS.set(ongoing_rentals)
 
 

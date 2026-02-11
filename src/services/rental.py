@@ -73,11 +73,11 @@ class RentalService:
         if not rental:
             logger.info("No rental found to end", extra={"rental_id": rental_id})
             raise ValueError(f"Rental with id {rental_id} is not found")
-        if rental.end_date:
+        if rental.rental_end_date:
             logger.info("Rental already ended", extra={"rental_id": rental_id})
             raise ValueError(f"Rental with id {rental_id} already ended")
 
-        rental.end_date = end_date or datetime.datetime.now(datetime.UTC)
+        rental.rental_end_date = end_date or datetime.datetime.now(datetime.UTC)
         rental.car.status = CarStatus.AVAILABLE
         customer_name = rental.customer_name
         self.db.commit()
