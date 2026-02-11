@@ -2,10 +2,10 @@ import os
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from models import DeclarativeBase
+from src.db.models import DeclarativeBase
 
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///.test.db")
-engine = create_engine(DATABASE_URL)
+engine = create_engine(DATABASE_URL, echo=True)
 Session = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 

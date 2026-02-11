@@ -27,7 +27,7 @@ class CarService:
         self.db.refresh(car)
         return car
 
-    def list_cars(self, status: Optional[CarStatus] = None, limit: Optional[int] = 10) -> List[Car]:
+    def list_cars(self, status: Optional[CarStatus] = None, limit: Optional[int] = 10) -> list[Car]:
         query = self.db.query(Car)
         if status:
             query = query.filter(Car.status == status)
