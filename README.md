@@ -1,6 +1,10 @@
 # DriveNow Car Rental API
 
-A car rental management system with clean architecture, PostgreSQL, FastAPI, and Docker.
+A car rental management system  
+**Stack:** 
+- FastAPI
+- PostgreSQL
+- Docker
 
 ## Features
 
