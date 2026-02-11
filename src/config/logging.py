@@ -10,8 +10,7 @@ def setup_logging():
             - Handlers: StreamHandler (Console), RotatingFileHandler (File)
             - Backup count: 5
     """
-    for handler in logging.root.handlers:
-        logging.root.removeHandler(handler)
+    logging.root.handlers.clear()
     logging.basicConfig(level=logging.INFO,
                         format="%(asctime)s | %(levelname)s | %(name)s: %(message)s",
                         handlers=[
