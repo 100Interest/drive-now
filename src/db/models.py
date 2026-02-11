@@ -22,7 +22,7 @@ class Car(DeclarativeBase):
     rentals = relationship("Rental", back_populates="car")
 
 
-class Rentals(DeclarativeBase):
+class Rental(DeclarativeBase):
     __tablename__ = "rentals"
     id = Column(Integer, primary_key=True)
     car_id = Column(Integer, ForeignKey("cars.id"))
