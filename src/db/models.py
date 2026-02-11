@@ -28,5 +28,5 @@ class Rental(DeclarativeBase):
     car_id = Column(Integer, ForeignKey("cars.id"))
     customer_name = Column(String, nullable=False)
     rental_start_date = Column(DateTime, nullable=False)
-    rental_end_date = Column(DateTime, nullable=False)
+    rental_end_date = Column(DateTime, nullable=True)
     car = relationship("Car", back_populates="rentals")

@@ -45,7 +45,9 @@ class RentalService:
             logger.info("Car already is not ready for use", extra={"car_id": car_id})
             raise ValueError(f"Car with id {car_id} is not available")
         car.status = CarStatus.IN_USE
-        rental = Rental(car_id=car_id, customer_name=customer_name)
+        rental_start_date = datetime.datetime.now(datetime.UTC)
+        rental = Rental(car_id=car_id, customer_name=customer_name,
+                        rental_start_date=rental_start_date, rental_end_date=None)
         self.db.add(rental)
         self.db.commit()
         self.db.refresh(rental)

@@ -8,6 +8,14 @@ from src.db.session import Session, get_db
 from src.services.rental import RentalService
 
 
+class CreateRentalPayload(BaseModel):
+    """
+        Request schema for creating a rental
+    """
+    car_id: int
+    customer_name: str
+
+
 class EndRentalPayload(BaseModel):
     """
         Request schema for ending a rental.
@@ -19,7 +27,7 @@ rental_router = APIRouter(prefix="/rental", tags=["Rental"])
 
 
 @rental_router.post("/")
-def create_rental(car_id: int, customer_name: str, db: Session = Depends(get_db)):
+def create_rental(rental_payload: CreateRentalPayload, db: Session = Depends(get_db)):
     """
        Create a new rental for a specific car
 
@@ -35,7 +43,7 @@ def create_rental(car_id: int, customer_name: str, db: Session = Depends(get_db)
            ValueError: If the car is not available
     """
     service = RentalService(db)
-    return service.create_new_rental(car_id, customer_name)
+    return service.create_new_rental(rental_payload.car_id, rental_payload.customer_name)
 
 
 @rental_router.post("/{rental_id}/end")

@@ -11,10 +11,10 @@ from src.metrics import mount_metrics, update_gauges
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """ lifespan events """
-    create_tables()
     update_gauges()
     yield
 
+create_tables()
 
 app = FastAPI(title="DriveNow", lifespan=lifespan)
 app.include_router(car_router)
