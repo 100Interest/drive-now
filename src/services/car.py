@@ -3,6 +3,7 @@ from typing import Optional
 
 from src.db.models import Car, CarStatus
 from src.db.session import Session
+from src.metrics import count_car_added
 
 logger = logging.getLogger(__name__)
 
@@ -39,6 +40,8 @@ class CarService:
         self.db.add(car)
         self.db.commit()
         self.db.refresh(car)
+
+        count_car_added(model)
         logger.info(f"New car added", extra={"model": model, "year": year})
         return car
 
@@ -70,7 +73,7 @@ class CarService:
         """
         car = self.get_car_by_id(car_id)
         if not car:
-            logger.error("No car with the given ID found", extra={"car_id": car_id})
+            logger.info("No car with the given ID found", extra={"car_id": car_id})
             raise ValueError(f"No car with id {car_id} was found")
         previous_status = car.status
         car.status = new_status
