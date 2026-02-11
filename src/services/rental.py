@@ -6,10 +6,35 @@ from src.db.session import Session
 
 
 class RentalService:
+    """
+    Service layer for handling rental lifecycle operations.
+
+    Manages business logic for creating and ending rentals,
+    including updating related car status.
+    """
     def __init__(self, db: Session):
+        """
+        Initialize the service with an active database session.
+
+        Args:
+            db (Session): SQLAlchemy session injected (via FastAPI "Depends" Injection)
+        """
         self.db = db
 
     def create_new_rental(self, car_id: int, customer_name: str) -> Rental:
+        """
+        Create a new rental for an available car
+
+        Args:
+            car_id (int): ID of the car to rent
+            customer_name (str): Name of the customer renting the car
+
+        Returns:
+            Rental: The newly created rental record
+
+        Raises:
+            ValueError: If the car does not exist or is not available
+        """
         car = self.db.query(Car).filter(Car.id == car_id, Car.status == CarStatus.AVAILABLE).first()
         if not car:
             raise ValueError(f"Car with id {car_id} is not available")
@@ -21,6 +46,20 @@ class RentalService:
         return rental
 
     def end_rental(self, rental_id: int, end_date: Optional[datetime.datetime] = None) -> Rental:
+        """
+        End an active rental and mark the car as available
+
+        Args:
+            rental_id (int): ID of the rental to end
+            end_date (Optional[datetime.datetime]): Optional custom end date
+                If not provided, the current UTC time is used
+
+        Returns:
+            Rental: The updated rental record
+
+        Raises:
+            ValueError: If the rental does not exist or was already ended
+        """
         rental = self.db.query(Rental).filter(Rental.id == rental_id).first()
         if not rental:
             raise ValueError(f"Rental with id {rental_id} is not found")

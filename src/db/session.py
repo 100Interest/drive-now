@@ -10,6 +10,15 @@ Session = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
 def get_db():
+    """
+    FastAPI dependency that provides a database session.
+
+    Yields:
+        Session: An active SQLAlchemy session for the duration of the request.
+
+    The session is automatically closed after the request is finished,
+    even if an exception occurs.
+    """
     db = Session()
     try:
         yield db
