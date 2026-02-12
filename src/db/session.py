@@ -5,7 +5,7 @@ from sqlalchemy.orm import sessionmaker
 from src.db.models import DeclarativeBase
 
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///.test.db")
-engine = create_engine(DATABASE_URL, echo=True)
+engine = create_engine(DATABASE_URL)
 Session = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
