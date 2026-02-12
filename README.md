@@ -12,6 +12,7 @@ A car rental management system
 - **Car CRUD**: Cars (create, read, update status, list/filter)
 - **Rental (C)R(U)D**: Create rental → End rental (auto car status update)
 - **Production Docker**: Postgres + App with healthchecks
+- **Metrics**: Prometheus metrics (Counters, Gauges and Histograms)
 - **Docs**: `/docs` (Swagger UI)
 
 ## Installation & Start
@@ -35,7 +36,8 @@ A car rental management system
 
 4. **Access:**
    - **API**: `http://localhost:7777/docs`
-   - **pgAdmin**: `localhost:7778` (user/password from `.env`)
+   - **Metrics**: Metrics endpoint: `http://localhost:7777/metrics` Prometheus: `http://localhost:9090`
+   - **pgAdmin**: `localhost:7778` (user/password/db name from `.env`)
 
 ## API Endpoints
 
