@@ -114,3 +114,13 @@ POSTGRES_DB=drivenow
 ```
 
 **Don't commit push the .env file filled with sensitive data!!!**
+
+## Answers
+
+> #### Why did I choose PostgreSQL?
+> I chose PostgreSQL because the data structures of my models are persistent. For example, a "car" will have a consistent set of attributes unless explicitly changed
+
+> This eliminates the need for flexible, JSON-like schemas that databases such as MongoDB provide
+
+> Other reason is because I was already familiar with the documentation of the docker-compose structure
+> of postgres and liked the way it was well [documented there too](https://hub.docker.com/_/postgres).
