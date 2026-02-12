@@ -15,5 +15,5 @@ def setup_logging():
                         format="%(asctime)s | %(levelname)s | %(name)s: %(message)s",
                         handlers=[
                             logging.StreamHandler(),
-                            RotatingFileHandler("drivenow.log", maxBytes=100_000, backupCount=5)
+                            RotatingFileHandler("/src/logs/drivenow.log", maxBytes=100_000, backupCount=5)
                         ])
