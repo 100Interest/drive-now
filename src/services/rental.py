@@ -57,6 +57,25 @@ class RentalService:
         logger.error(f"New rental added car_id={car_id} customer_name={customer_name}")
         return rental
 
+    def get_rental_by_id(self, rental_id: int) -> Rental:
+        """
+        Get rental from id
+
+        Args:
+            rental_id (int): ID of the rental
+
+        Returns:
+            Rental: The newly created rental record
+
+        Raises:
+            ValueError: If the rental does not exist or is not available
+        """
+        rental = self.db.query(Rental).filter(Rental.id == rental_id).first()
+        if not rental:
+            logger.info(f"Rental is not found rental_id={rental_id}")
+            raise RentalNotFoundError(rental_id)
+        return rental
+
     def end_rental(self, rental_id: int, end_date: Optional[datetime.datetime] = None) -> Rental:
         """
         End an active rental and mark the car as available

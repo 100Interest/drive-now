@@ -25,7 +25,7 @@ A car rental management system
    ```
    POSTGRES_USER=your_username
    POSTGRES_PASSWORD=your_secure_password  
-   POSTGRES_DB=drivenow
+   POSTGRES_DB=your_db_name
    ```
 
 3. **Run with Docker:**
@@ -50,10 +50,12 @@ A car rental management system
 
 ### Rental Management (`/rental`)
 
-| Method | Endpoint | Description | Parameters                                                |
-|--------|----------|-------------|-----------------------------------------------------------|
-| `POST` | `/rental/` | Start rental | `?car_id=1&customer_name=John`                            |
-| `POST` | `/rental/{rental_id}/end` | End rental | `{"end_date": "2026-02-11T15:00:00"}` ( date is optional) |
+| Method | Endpoint | Description      | Parameters                                              |
+|--------|----------|------------------|---------------------------------------------------------|
+| `GET`  | `/rental/` | Get rental by ID | `{"rental_id": 1}`                                        |
+| `POST` | `/rental/` | Start rental     | `?car_id=1&customer_name=John`                          |
+| `POST` | `/rental/{rental_id}/end` | End rental       | `{"end_date": "2026-02-11T15:00:00"}` ( date is optional) |
+
 
 ## Architecture
 

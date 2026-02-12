@@ -63,3 +63,19 @@ def end_rental(rental_id: int, end_rental_payload: EndRentalPayload = None, db: 
     end_date = end_rental_payload.end_date if end_rental_payload.end_date else None
     rental = service.end_rental(rental_id, end_date)
     return rental
+
+
+@rental_router.get("/")
+def get_rental_by_id(rental_id: int, db: Session = Depends(get_db)):
+    """
+       Get rental by its ID
+
+       Args:
+           rental_id (int): ID of the rental
+
+       Returns:
+           Rental: The rental if found
+    """
+    service = RentalService(db)
+    rental = service.get_rental_by_id(rental_id)
+    return rental
