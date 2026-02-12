@@ -42,7 +42,7 @@ class RentalService:
         """
         car = self.db.query(Car).filter(Car.id == car_id, Car.status == CarStatus.AVAILABLE).first()
         if not car:
-            logger.info("Car already is not ready for use", extra={"car_id": car_id})
+            logger.info(f"Car is not ready for use yet car_id={car_id}")
             raise ValueError(f"Car with id {car_id} is not available")
         car.status = CarStatus.IN_USE
         rental_start_date = datetime.datetime.now(datetime.UTC)
@@ -53,7 +53,7 @@ class RentalService:
         self.db.refresh(rental)
         count_rental_created(customer_name)
         update_gauges()
-        logger.error("New rental added", extra={"car_id": car_id, "customer_name": customer_name})
+        logger.error(f"New rental added car_id={car_id} customer_name={customer_name}")
         return rental
 
     def end_rental(self, rental_id: int, end_date: Optional[datetime.datetime] = None) -> Rental:
@@ -73,10 +73,10 @@ class RentalService:
         """
         rental = self.db.query(Rental).filter(Rental.id == rental_id).first()
         if not rental:
-            logger.info("No rental found to end", extra={"rental_id": rental_id})
+            logger.info(f"No rental found to end rental_id={rental_id}")
             raise ValueError(f"Rental with id {rental_id} is not found")
         if rental.rental_end_date:
-            logger.info("Rental already ended", extra={"rental_id": rental_id})
+            logger.info(f"Rental already ended rental_id={rental_id}")
             raise ValueError(f"Rental with id {rental_id} already ended")
 
         rental.rental_end_date = end_date or datetime.datetime.now(datetime.UTC)
@@ -86,5 +86,5 @@ class RentalService:
         self.db.refresh(rental)
         count_rental_ended(customer_name)
         update_gauges()
-        logger.error("Rental ended successfully", extra={"rental_id": rental_id, })
+        logger.error(f"Rental ended successfully rental_id={rental_id} customer_name={customer_name}")
         return rental
