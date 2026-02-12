@@ -65,7 +65,7 @@ def end_rental(rental_id: int, end_rental_payload: EndRentalPayload = None, db: 
     return rental
 
 
-@rental_router.get("/")
+@rental_router.get("/{rental_id}")
 def get_rental_by_id(rental_id: int, db: Session = Depends(get_db)):
     """
        Get rental by its ID
