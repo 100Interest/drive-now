@@ -1,9 +1,10 @@
-import logging
 import datetime
+import logging
 from typing import Optional
 
 from src.db.models import Rental, Car, CarStatus
 from src.db.session import Session
+from src.exceptions import CarUnavailableError, RentalNotFoundError, RentalAlreadyEndedError
 from src.metrics import count_rental_created, count_rental_ended, update_gauges
 
 logger = logging.getLogger(__name__)
@@ -43,7 +44,7 @@ class RentalService:
         car = self.db.query(Car).filter(Car.id == car_id, Car.status == CarStatus.AVAILABLE).first()
         if not car:
             logger.info(f"Car is not ready for use yet car_id={car_id}")
-            raise ValueError(f"Car with id {car_id} is not available")
+            raise CarUnavailableError(car_id)
         car.status = CarStatus.IN_USE
         rental_start_date = datetime.datetime.now(datetime.UTC)
         rental = Rental(car_id=car_id, customer_name=customer_name,
@@ -74,10 +75,10 @@ class RentalService:
         rental = self.db.query(Rental).filter(Rental.id == rental_id).first()
         if not rental:
             logger.info(f"No rental found to end rental_id={rental_id}")
-            raise ValueError(f"Rental with id {rental_id} is not found")
+            raise RentalNotFoundError(rental_id)
         if rental.rental_end_date:
             logger.info(f"Rental already ended rental_id={rental_id}")
-            raise ValueError(f"Rental with id {rental_id} already ended")
+            raise RentalAlreadyEndedError(rental_id)
 
         rental.rental_end_date = end_date or datetime.datetime.now(datetime.UTC)
         rental.car.status = CarStatus.AVAILABLE

@@ -3,6 +3,7 @@ from typing import Optional
 
 from src.db.models import Car, CarStatus
 from src.db.session import Session
+from src.exceptions import CarUnavailableError
 from src.metrics import count_car_added
 
 logger = logging.getLogger(__name__)
@@ -74,7 +75,7 @@ class CarService:
         car = self.get_car_by_id(car_id)
         if not car:
             logger.info(f"No car with the given ID found car_id={car_id}")
-            raise ValueError(f"No car with id {car_id} was found")
+            raise CarUnavailableError(car_id)
         previous_status = car.status
         car.status = new_status
         self.db.commit()
