@@ -4,7 +4,7 @@ from typing import Optional
 
 from src.db.models import Rental, Car, CarStatus
 from src.db.session import Session
-from src.exceptions import CarUnavailableError, RentalNotFoundError, RentalAlreadyEndedError
+from src.exceptions import CarNotFoundError, CarUnavailableError, RentalNotFoundError, RentalAlreadyEndedError
 from src.metrics import count_rental_created, count_rental_ended, update_gauges
 
 logger = logging.getLogger(__name__)
@@ -39,12 +39,17 @@ class RentalService:
             Rental: The newly created rental record
 
         Raises:
-            ValueError: If the car does not exist or is not available
+            CarNotFoundError: If the car does not exist
+            CarUnavailableError: If the car is in use or under maintenance (not available)
         """
-        car = self.db.query(Car).filter(Car.id == car_id, Car.status == CarStatus.AVAILABLE).first()
+        car = self.db.query(Car).filter(Car.id == car_id).first()
         if not car:
-            logger.info(f"Car is not ready for use yet car_id={car_id}")
-            raise CarUnavailableError(car_id)
+            logger.info(f"Car is not found car_id={car_id}")
+            raise CarNotFoundError(car_id)
+        car_status = car.status
+        if car_status != CarStatus.AVAILABLE:
+            logger.info(f"Car is found but not available for usage yet. car_id={car_id} status={car_status}")
+            raise CarUnavailableError(car_id, str(car_status))
         car.status = CarStatus.IN_USE
         rental_start_date = datetime.datetime.now(datetime.UTC)
         rental = Rental(car_id=car_id, customer_name=customer_name,
@@ -68,7 +73,7 @@ class RentalService:
             Rental: The newly created rental record
 
         Raises:
-            ValueError: If the rental does not exist or is not available
+            RentalNotFoundError: If the rental is not found
         """
         rental = self.db.query(Rental).filter(Rental.id == rental_id).first()
         if not rental:
@@ -89,7 +94,8 @@ class RentalService:
             Rental: The updated rental record
 
         Raises:
-            ValueError: If the rental does not exist or was already ended
+            RentalNotFoundError: If the rental does not exist
+            RentalAlreadyEndedError: If the rental has already been ended before
         """
         rental = self.db.query(Rental).filter(Rental.id == rental_id).first()
         if not rental:

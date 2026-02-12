@@ -3,7 +3,7 @@ from typing import Optional
 
 from src.db.models import Car, CarStatus
 from src.db.session import Session
-from src.exceptions import CarUnavailableError
+from src.exceptions import CarNotFoundError
 from src.metrics import count_car_added
 
 logger = logging.getLogger(__name__)
@@ -55,8 +55,15 @@ class CarService:
 
         Returns:
             Car | None: The car if found, otherwise None
+
+        Raises:
+            CarNotFoundError: If the car with the given ID does not exist
         """
-        return self.db.query(Car).filter(Car.id == car_id).first()
+        car = self.db.query(Car).filter(Car.id == car_id).first()
+        if not car:
+            logger.info(f"Car is not found car_id={car_id}")
+            raise CarNotFoundError(car_id)
+        return car
 
     def update_car_status_by_car_id(self, car_id: int, new_status: CarStatus) -> Car:
         """
@@ -70,12 +77,12 @@ class CarService:
             Car: The updated car.
 
         Raises:
-            ValueError: If no car with the given ID exists
+            CarNotFoundError: If no car with the given ID exists
         """
         car = self.get_car_by_id(car_id)
         if not car:
             logger.info(f"No car with the given ID found car_id={car_id}")
-            raise CarUnavailableError(car_id)
+            raise CarNotFoundError(car_id)
         previous_status = car.status
         car.status = new_status
         self.db.commit()

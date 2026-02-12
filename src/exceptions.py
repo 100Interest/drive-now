@@ -1,12 +1,20 @@
 from fastapi import HTTPException, status
 
 
-class CarUnavailableError(HTTPException):
-    """ This error is being raised when the car is not available or not found yet the user tries to rent it """
+class CarNotFoundError(HTTPException):
+    """ This error is being raised when the car is not found yet the user tries to fetch/rent it """
 
     def __init__(self, car_id: int):
+        super().__init__(status_code=status.HTTP_404_NOT_FOUND,
+                         detail=f"Car with id {car_id} not found")
+
+
+class CarUnavailableError(HTTPException):
+    """ This error is being raised when the car is not available yet the user tries to rent it """
+
+    def __init__(self, car_id: int, car_status: str):
         super().__init__(status_code=status.HTTP_400_BAD_REQUEST,
-                         detail=f"Car with id {car_id} is not available or not found")
+                         detail=f"Car with id {car_id} is not available, current status: {car_status}")
 
 
 class RentalNotFoundError(HTTPException):
