@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 # Counters
 CARS_ADDED = Counter("total_cars_added", "Total cars added", ["model"])
 RENTALS_CREATED = Counter("total_rentals_created", "Total rentals created", ["customer_name"])
-RENTALS_ENDED = Counter("total_rentals_ended", "Total rentals completed")
+RENTALS_ENDED = Counter("total_rentals_ended", "Total rentals completed", ["customer_name"])
 
 # Gauges
 AVAILABLE_CARS = Gauge("total_available_cars", "Number of AVAILABLE cars")
