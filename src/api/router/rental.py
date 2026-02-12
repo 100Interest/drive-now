@@ -72,6 +72,7 @@ def get_rental_by_id(rental_id: int, db: Session = Depends(get_db)):
 
        Args:
            rental_id (int): ID of the rental
+           db (Session): Database session dependency
 
        Returns:
            Rental: The rental if found
