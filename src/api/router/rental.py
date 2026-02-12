@@ -1,7 +1,6 @@
 import datetime
-from typing import Optional
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 from pydantic import BaseModel
 
 from src.db.session import Session, get_db
@@ -59,14 +58,8 @@ def end_rental(rental_id: int, end_rental_payload: EndRentalPayload = None, db: 
 
        Returns:
            Rental: The updated rental record
-
-       Raises:
-           HTTPException: If the rental does not exist or was already ended
     """
     service = RentalService(db)
     end_date = end_rental_payload.end_date if end_rental_payload.end_date else None
-    try:
-        rental = service.end_rental(rental_id, end_date)
-        return rental
-    except ValueError as err:
-        raise HTTPException(status_code=404, detail=f"Rental id {rental_id} was not found\n{err}")
+    rental = service.end_rental(rental_id, end_date)
+    return rental
