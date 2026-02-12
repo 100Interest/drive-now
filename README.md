@@ -5,6 +5,7 @@ A car rental management system
 - FastAPI
 - PostgreSQL
 - Docker
+- Prometheus
 
 ## Features
 
