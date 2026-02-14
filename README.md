@@ -18,12 +18,12 @@ A car rental management system
 
 ## Installation & Start
 
-1. **Copy environment variables:**
+1. **Copy environment variables (copy .env.template and change its name to .env):**
    ```bash
    cp .env.template .env
    ```
 
-2. **Edit `.env` with your credentials:**
+2. **Edit `.env` with your credentials: (with those you will be able to connect to pgAdmin as well)**
    ```
    POSTGRES_USER=your_username
    POSTGRES_PASSWORD=your_secure_password  
@@ -32,7 +32,8 @@ A car rental management system
 
 3. **Run with Docker:**
    ```bash
-   docker compose up --build
+   docker-compose up --build
+   # if docker is already running with this try docker-compose down -v
    ```
 
 4. **Access:**
