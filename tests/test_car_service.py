@@ -5,27 +5,22 @@ from sqlalchemy.orm import sessionmaker
 from src.db.models import DeclarativeBase, CarStatus
 from src.services.car import CarService
 
-LOCAL_SQL_MOCK_URL = "sqlite:///./car_service_mock.db"
 
-
-@pytest.fixture(scope="session")
-def engine():
-    """ Create an SQLAlchemy engine """
-    engine = create_engine(LOCAL_SQL_MOCK_URL)
+@pytest.fixture(scope="function")
+def db_session():
+    """ Create clean DB session """
+    engine = create_engine("sqlite:///:memory:")
     DeclarativeBase.metadata.create_all(bind=engine)
-    yield engine
-    DeclarativeBase.metadata.drop_all(bind=engine)
 
+    local_db_session = sessionmaker(bind=engine, autocommit=False, autoflush=False)
+    db = local_db_session()
 
-@pytest.fixture(scope="session")
-def db_session(engine):
-    """ create a database """
-    test_session = sessionmaker(bind=engine, autocommit=False, autoflush=False)
-    db = test_session()
     try:
         yield db
     finally:
+        db.rollback()
         db.close()
+        DeclarativeBase.metadata.drop_all(bind=engine)
 
 
 def test_add_car(db_session):
