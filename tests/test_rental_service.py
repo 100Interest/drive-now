@@ -1,12 +1,13 @@
-import pytest
 from unittest.mock import patch
+
+import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from src.db.models import DeclarativeBase, CarStatus
+from src.exceptions import CarUnavailableError
 from src.services.car import CarService
 from src.services.rental import RentalService
-from src.exceptions import CarUnavailableError
 
 
 @pytest.fixture(scope="function")
