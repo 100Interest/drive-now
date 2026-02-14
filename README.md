@@ -80,7 +80,7 @@ src/
 pip install -r requirements.txt
 
 # Run (uses SQLite)
-python main.py
+uvicorn src.api.main:app --reload --host 0.0.0.0 --port 7777
 ```
 
 ## Docker Compose
