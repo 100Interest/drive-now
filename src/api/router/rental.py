@@ -31,8 +31,7 @@ def create_rental(rental_payload: CreateRentalPayload, db: Session = Depends(get
        Create a new rental for a specific car
 
        Args:
-           car_id (int): ID of the car to rent
-           customer_name (str): Name of the customer
+           rental_payload (CreateRentalPayload): payload of the rental creation (car_id: int, customer_name: str)
            db (Session): Database session dependency
 
        Returns:
