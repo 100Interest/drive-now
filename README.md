@@ -5,6 +5,7 @@ A car rental management system
 - FastAPI
 - PostgreSQL
 - Docker
+- Pytest
 - Prometheus
 
 ## Features
@@ -13,6 +14,7 @@ A car rental management system
 - **Car CRUD**: Cars (create, read, update status, list/filter)
 - **Rental (C)R(U)D**: Create rental → End rental (auto car status update)
 - **Production Docker**: Postgres + App with healthchecks
+- **Tests**: Pytest unittests for the services
 - **Metrics**: Prometheus metrics (Counters, Gauges and Histograms)
 - **Docs**: `/docs` (Swagger UI)
 
@@ -120,6 +122,9 @@ pip install -r requirements.txt
 
 # Run (uses SQLite)
 uvicorn src.api.main:app --reload --host 0.0.0.0 --port 7777
+
+# For running the tests
+pytest
 ```
 
 ## Docker Compose
