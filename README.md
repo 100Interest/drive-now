@@ -73,6 +73,45 @@ src/
 
 **Layers**: API → Services → DB (dependency injection via `Depends(get_db)`)
 
+```mermaid
+graph TB
+
+    browser[Browser / fetch]
+    app[FastAPI app<br/>main.py]
+
+    car_router["/car routes"]
+    rental_router["/rental routes"]
+
+    car_service[CarService]
+    rental_service[RentalService]
+
+    getdb[get_db session]
+
+    database[(SQLite / Postgres)]
+    tables[(cars + rentals tables)]
+
+    metrics[/metrics endpoint/]
+    prometheus[Prometheus]
+
+    browser -->|HTTP| app
+    app --> car_router
+    app --> rental_router
+
+    car_router --> getdb
+    rental_router --> getdb
+
+    getdb --> car_service
+    getdb --> rental_service
+
+    car_service --> database
+    rental_service --> database
+    database --> tables
+
+    app --> metrics
+    prometheus -.scrapes.-> metrics
+
+```
+
 ## Local Development
 
 ```bash
